@@ -3,21 +3,21 @@ import { ThemedText } from "@/components/themed-text";
 import { CHAPTER_ILLUSTRATIONS } from "@/constants/ChapterIllustrations";
 import { COURSE_DATA } from "@/constants/CourseData";
 import { Colors, FontFamily, Radius, Shadow, Spacing } from "@/constants/theme";
-import { useBookmarks } from "@/lib/bookmarks";
 import { Events, track } from "@/lib/analytics";
+import { useBookmarks } from "@/lib/bookmarks";
 import { CourseStep, StepSubtype } from "@/lib/courseSteps";
 import { haptics } from "@/lib/haptics";
 import {
-  ChapterStepStates,
-  getChapterStepStates,
-  StepWithState,
+    ChapterStepStates,
+    getChapterStepStates,
+    StepWithState,
 } from "@/lib/stepProgress";
 import { T } from "@/lib/strings";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 const UNITS: { range: [number, number]; title: string; subtitle: string }[] = [
   { range: [1, 5], title: "Bölüm 1", subtitle: "Tanyşlyk we ýer" },
@@ -139,6 +139,7 @@ export default function ChapterDetailScreen() {
   const isPronunciation = id === 0;
   const [stepData, setStepData] = useState<ChapterStepStates | null>(null);
   const { bookmarks, toggle: toggleBookmark } = useBookmarks();
+  const insets = useSafeAreaInsets();
   const isBookmarked = bookmarks.has(id);
 
   useFocusEffect(
@@ -236,11 +237,11 @@ export default function ChapterDetailScreen() {
       </View>
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 32 + insets.bottom }]}
         showsVerticalScrollIndicator={false}
       >
         {/* Hero block */}
-        <View style={styles.hero}>
+        <View style={[styles.hero, { paddingBottom: 24 + insets.bottom }]}>
           <View style={styles.heroLeft}>
             {unit && (
               <ThemedText style={styles.unitChip}>
@@ -338,7 +339,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: Spacing["2xl"],
-    paddingBottom: 32,
   },
 
   // Hero
@@ -346,7 +346,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingTop: 8,
-    paddingBottom: 24,
     gap: 16,
   },
   heroLeft: { flex: 1 },
