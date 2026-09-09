@@ -144,8 +144,10 @@ export default function FillBlankMode({
           styles.actionButton,
           {
             backgroundColor: answered
-              ? Colors.primaryAccentColor
-              : Colors.surfaceTertiary,
+            ? isCorrect
+              ? Colors.successColor
+              : Colors.primaryAccentColor
+            : Colors.surfaceTertiary,
           },
         ]}
         onPress={handleContinue}
