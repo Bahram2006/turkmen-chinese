@@ -83,6 +83,7 @@ export default function LessonContent({
   >({});
   const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
   const [wrongQuestions, setWrongQuestions] = useState<Set<number>>(new Set());
+  const [correctIndices, setCorrectIndices] = useState<Set<number>>(new Set());
   const [visitedIndices, setVisitedIndices] = useState<Set<number>>(() => new Set([0]));
 
   const wrongIndices = useMemo(() => {
@@ -177,6 +178,7 @@ export default function LessonContent({
           (attemptCount > 0 && wrongQuestions.has(currentQuestion.id))
         ) {
           setCorrectAnswersCount((prev) => prev + 1);
+          setCorrectIndices((prev) => new Set(prev).add(currentQuestionIndex));
           awardCorrectXp();
           void markActiveDay();
         }
@@ -727,6 +729,7 @@ export default function LessonContent({
         currentIndex={currentQuestionIndex}
         visitedIndices={visitedIndices}
         wrongIndices={wrongIndices}
+        correctIndices={correctIndices}
         onJumpTo={jumpToQuestion}
       />
     </View>
