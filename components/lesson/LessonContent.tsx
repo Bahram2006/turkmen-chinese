@@ -82,14 +82,14 @@ export default function LessonContent({
     Record<number, number>
   >({});
   const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
-  const [wrongQuestions, setWrongQuestions] = useState<Set<string>>(new Set());
-  const [correctQuestions, setCorrectQuestions] = useState<Set<string>>(new Set());
+  const [wrongQuestions, setWrongQuestions] = useState<Set<number>>(new Set());
+  const [correctQuestions, setCorrectQuestions] = useState<Set<number>>(new Set());
   const [visitedIndices, setVisitedIndices] = useState<Set<number>>(() => new Set([0]));
 
   const wrongIndices = useMemo(() => {
     const s = new Set<number>();
     questions.forEach((q, i) => {
-      if (wrongQuestions.has(String(q.id))) s.add(i);
+      if (wrongQuestions.has(q.id)) s.add(i);
     });
     return s;
   }, [questions, wrongQuestions]);
@@ -97,7 +97,7 @@ export default function LessonContent({
   const correctIndices = useMemo(() => {
     const s = new Set<number>();
     questions.forEach((q, i) => {
-      if (correctQuestions.has(String(q.id))) s.add(i);
+      if (correctQuestions.has(q.id)) s.add(i);
     });
     return s;
   }, [questions, correctQuestions]);
@@ -183,10 +183,10 @@ export default function LessonContent({
         haptics.success();
         if (
           attemptCount === 0 ||
-          (attemptCount > 0 && wrongQuestions.has(String(currentQuestion.id)))
+          (attemptCount > 0 && wrongQuestions.has(currentQuestion.id))
         ) {
           setCorrectAnswersCount((prev) => prev + 1);
-          setCorrectQuestions((prev) => new Set(prev).add(String(currentQuestion.id))); // <-- ŞU ÝAÝDA DÜZETMELI
+          setCorrectQuestions((prev) => new Set(prev).add(currentQuestion.id));
           awardCorrectXp();
           void markActiveDay();
         }
@@ -198,7 +198,7 @@ export default function LessonContent({
         }));
 
         if (attemptCount === 0) {
-          setWrongQuestions((prev) => new Set(prev).add(String(currentQuestion.id)));
+          setWrongQuestions((prev) => new Set(prev).add(currentQuestion.id));
         }
       }
     }
@@ -368,7 +368,7 @@ export default function LessonContent({
         const finalStats = computeLessonStats(
           questions,
           correctAnswersCount,
-          new Set(Array.from(wrongQuestions).map(Number)),
+          wrongQuestions,
           questionAttempts,
         );
 
@@ -411,13 +411,13 @@ export default function LessonContent({
     if (correct) {
       haptics.success();
       setCorrectAnswersCount((prev) => prev + 1);
-      setCorrectQuestions((prev) => new Set(prev).add(String(currentQuestion.id)));
+      setCorrectQuestions((prev) => new Set(prev).add(currentQuestion.id));
       void recordQuestionAnswered();
       awardCorrectXp();
       void markActiveDay();
     } else {
       haptics.error();
-      setWrongQuestions((prev) => new Set(prev).add(String(currentQuestion.id)));
+      setWrongQuestions((prev) => new Set(prev).add(currentQuestion.id));
     }
     nextQuestion();
   };

@@ -8,7 +8,7 @@ interface Props {
   currentIndex: number;
   visitedIndices: Set<number>;
   wrongIndices: Set<number>;
-  correctIndices: Set<number>; // <-- Şu setiri goşuň
+  correctIndices: Set<number>;
   onJumpTo: (index: number) => void;
 }
 
@@ -20,7 +20,7 @@ export default function ExerciseNavBar({
   currentIndex,
   visitedIndices,
   wrongIndices,
-  correctIndices, // <-- Şu setiri goşuň
+  correctIndices,
   onJumpTo,
 }: Props) {
   const scrollRef = useRef<ScrollView>(null);
@@ -45,7 +45,7 @@ export default function ExerciseNavBar({
           const isCurrent = i === currentIndex;
           const isVisited = visitedIndices.has(i);
           const isWrong = wrongIndices.has(i);
-          const isCorrect = correctIndices.has(i); // <-- Şu setiri goşuň
+          const isCorrect = correctIndices.has(i);
 
           return (
             <Pressable
